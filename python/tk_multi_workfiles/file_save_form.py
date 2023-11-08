@@ -32,6 +32,14 @@ from .errors import MissingTemplatesError
 
 from .actions.save_as_file_action import SaveAsFileAction
 
+thumbnail_widget = tank.platform.import_framework(
+    "tk-framework-widget", "thumbnail_widget"
+)
+
+
+class ThumbnailWidget(thumbnail_widget.ThumbnailWidget):
+    pass
+
 
 class FileSaveForm(FileFormBase):
     """
@@ -49,6 +57,9 @@ class FileSaveForm(FileFormBase):
         self._current_env = None
         self._extension_choices = []
         self._preview_task = None
+        self._thumbnail_path = None
+        self._current_temp_file_path = None
+        self._created_temp_files = []
 
         font_colour = self.palette().text().color()
         if font_colour.value() < 0.5:
@@ -137,6 +148,12 @@ class FileSaveForm(FileFormBase):
         self._ui.use_next_available_cb.toggled.connect(
             self._on_use_next_available_version_toggled
         )
+
+        # Setup thumbnail
+        self._ui.item_thumbnail_label.show()
+        self._ui.item_thumbnail.show()
+        self._ui.item_thumbnail.setEnabled(True)
+
 
         self._ui.browser.file_selected.connect(self._on_browser_file_selected)
         self._ui.browser.file_double_clicked.connect(
@@ -326,7 +343,7 @@ class FileSaveForm(FileFormBase):
         self._disable_save_and_warn(msg)
 
     def _generate_path(
-        self, env, name, version, use_next_version, ext, require_path=False
+            self, env, name, version, use_next_version, ext, require_path=False
     ):
         """
         :returns:   Tuple containing (path, min_version)
@@ -399,13 +416,13 @@ class FileSaveForm(FileFormBase):
                 try:
                     finder = FileFinder()
                     files = (
-                        finder.find_files(
-                            env.work_template,
-                            env.publish_template,
-                            env.context,
-                            file_key,
-                        )
-                        or []
+                            finder.find_files(
+                                env.work_template,
+                                env.publish_template,
+                                env.context,
+                                file_key,
+                            )
+                            or []
                     )
                 except TankError as e:
                     raise TankError("Failed to find files for this work area: %s" % e)
@@ -536,7 +553,7 @@ class FileSaveForm(FileFormBase):
             # update name edit:
             name = fields.get("name", "")
             name_is_optional = (
-                name_is_used and self._current_env.work_template.is_optional("name")
+                    name_is_used and self._current_env.work_template.is_optional("name")
             )
             if not name and not name_is_optional:
                 # need to use either the current name if we have it or the default if we don't!
@@ -586,7 +603,7 @@ class FileSaveForm(FileFormBase):
                 # try to set something valid for the name:
                 name = value_to_str(self._ui.name_edit.text())
                 name_is_optional = (
-                    name_is_used and self._current_env.work_template.is_optional("name")
+                        name_is_used and self._current_env.work_template.is_optional("name")
                 )
                 if not name and not name_is_optional:
                     # lets populate name with a default value:
@@ -610,7 +627,7 @@ class FileSaveForm(FileFormBase):
                 current_ext_idx = self._ui.file_type_menu.currentIndex()
                 current_ext = ""
                 if current_ext_idx >= 0 and current_ext_idx < len(
-                    self._extension_choices
+                        self._extension_choices
                 ):
                     current_ext = self._extension_choices[current_ext_idx]
                 if current_ext in ext_choices:
@@ -627,6 +644,73 @@ class FileSaveForm(FileFormBase):
             self._ui.version_label.setVisible(version_is_used)
             self._ui.version_spinner.setVisible(version_is_used)
             self._ui.use_next_available_cb.setVisible(version_is_used)
+
+    def get_item_description(self):
+        """
+        Returns the save's form description
+        :return: str description
+        """
+
+        # the thumbnail path was explicitly provided
+        if self._ui.item_comments.toPlainText():
+            return self._ui.item_comments.toPlainText()
+
+        return ""
+
+    def get_thumbnail_as_path(self):
+        """
+        Returns the item's thumbnail as a path to a file on disk. If the
+        thumbnail was originally supplied as a file path, that path will be
+        returned. If the thumbnail was created via screen grab or set directly
+        via :class:`QtGui.QPixmap`, this method will generate an image as a temp file
+        on disk and return its path.
+
+        .. warning:: This property may return ``None`` if run without a UI
+            present and no thumbnail path has been set on the item.
+
+        :returns: Path to a file on disk or None if no thumbnail set
+        """
+
+        # the thumbnail path was explicitly provided
+        if self._thumbnail_path:
+            return self._thumbnail_path
+
+        if self._current_temp_file_path:
+            return self._current_temp_file_path
+
+        # nothing to do if running without a UI
+        if not sgtk.platform.current_engine().has_ui:
+            return None
+
+        if self._ui.item_thumbnail is None:
+            return None
+
+        temp_path = tempfile.NamedTemporaryFile(
+            suffix=".png", prefix="sgtk_thumb", delete=False, dir="C:/local_pipe/temp"
+        ).name
+
+        #temp_path = "C:/local_pipe/temp/snapshot"
+
+        success = self._ui.item_thumbnail._thumbnail.save(temp_path)
+
+        if success:
+
+            if os.path.getsize(temp_path) > 0:
+                self._current_temp_file_path = temp_path
+                self._created_temp_files.append(temp_path)
+            else:
+                self.logger.debug(
+                    "A zero-size thumbnail was written for %s, "
+                    "no thumbnail will be returned." % "test item"
+                )
+                return None
+            return temp_path
+        else:
+            self.logger.warning(
+                "Thumbnail save to disk failed. No thumbnail will be returned "
+                "for %s." % "test item"
+            )
+            return None
 
     def _on_expand_toggled(self, checked):
         """ """
@@ -712,8 +796,8 @@ class FileSaveForm(FileFormBase):
                 raise TankError("Failed to generate a path to save to - %s" % e)
 
             if (
-                version_to_save is not None  # version is used in the path
-                and version_to_save != version
+                    version_to_save is not None  # version is used in the path
+                    and version_to_save != version
             ):  # version in the path is different to the one in the UI!
                 # check to see if the version has changed as a result of the
                 # preview generation - if it has then we should double check
@@ -781,7 +865,10 @@ class FileSaveForm(FileFormBase):
 
         # Build and execute the save action:
         action = SaveAsFileAction(file_item, self._current_env)
-        file_saved = action.execute(self)
+        # Gather Additional data for hook
+        thumbnail_path = self.get_thumbnail_as_path()
+        description = self.get_item_description()
+        file_saved = action.execute(self, image=thumbnail_path, description=description)
 
         if file_saved:
             # Execute hook for saving additional user login.

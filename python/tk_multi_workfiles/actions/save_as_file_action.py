@@ -24,7 +24,7 @@ class SaveAsFileAction(FileAction):
         """ """
         FileAction.__init__(self, "Save As", file_item, None, environment)
 
-    def execute(self, parent_ui):
+    def execute(self, parent_ui, **kwargs):
         """ """
         if (
             not self.file
@@ -55,7 +55,7 @@ class SaveAsFileAction(FileAction):
         # and save the current file as the new path:
         try:
             save_file(
-                self._app, SAVE_FILE_AS_ACTION, self.environment.context, self.file.path
+                self._app, SAVE_FILE_AS_ACTION, self.environment.context, self.file.path, **kwargs
             )
         except Exception as e:
             QtGui.QMessageBox.critical(

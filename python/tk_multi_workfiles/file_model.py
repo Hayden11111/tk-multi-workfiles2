@@ -845,8 +845,7 @@ class FileModel(QtGui.QStandardItemModel):
             # if this is from a published file then we want to retrieve the thumbnail
             # if one is available:
             if (
-                file_item.is_published
-                and file_item.thumbnail_path
+                file_item.thumbnail_path
                 and not file_item.thumbnail
             ):
                 # request the thumbnail using the data retriever:

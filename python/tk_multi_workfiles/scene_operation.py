@@ -33,6 +33,7 @@ def _do_scene_operation(
     version=0,
     read_only=False,
     result_types=None,
+    **kwargs
 ):
     """
     Do the specified scene operation with the specified args by executing the scene operation hook
@@ -74,6 +75,7 @@ def _do_scene_operation(
             parent_action=action_str,
             file_version=version,
             read_only=read_only,
+            **kwargs
         )
     except TankError as e:
         # deliberately filter out exception that used to be thrown
@@ -128,16 +130,16 @@ def prepare_new_scene(app, action, context):
     return _do_scene_operation(app, action, context, "prepare_new")
 
 
-def save_file(app, action, context, path=None):
+def save_file(app, action, context, path=None,**kwargs):
     """
     Use hook to save the current file
     """
     if path != None:
         app.log_debug("Saving the current file as '%s' with hook" % path)
-        _do_scene_operation(app, action, context, "save_as", path)
+        _do_scene_operation(app, action, context, "save_as", path, **kwargs)
     else:
         app.log_debug("Saving the current file with hook")
-        _do_scene_operation(app, action, context, "save")
+        _do_scene_operation(app, action, context, "save", **kwargs)
 
 
 def open_file(app, action, context, path, version, read_only):

@@ -189,10 +189,12 @@ class FileItem(object):
         """
         :returns:   The path on disk of the thumbnail for this file
         """
+
         if self._thumbnail_path is None:
             self._thumbnail_path = self._details.get(
                 "thumbnail"
             ) or self._publish_details.get("thumbnail")
+
         return self._thumbnail_path
 
     # @thumbnail_path.setter
@@ -203,6 +205,7 @@ class FileItem(object):
         if value != self.thumbnail_path:
             self._thumbnail_path = value
             self._thumbnail_image = None
+
 
     thumbnail_path = property(_get_thumbnail_path, _set_thumbnail_path)
 
@@ -218,6 +221,7 @@ class FileItem(object):
         """
         :param value:   The QPixmap that should be used to represent this file
         """
+
         self._thumbnail_image = value
 
     thumbnail = property(_get_thumbnail, _set_thumbnail)

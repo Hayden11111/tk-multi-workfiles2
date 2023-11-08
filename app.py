@@ -75,7 +75,7 @@ class MultiWorkFiles(sgtk.platform.Application):
         if self.get_setting("show_file_save"):
             # register the file save command
             self.engine.register_command(
-                "File Save...",
+                "Snapshot...",
                 self.show_file_save_dlg,
                 {
                     "short_name": "file_save",

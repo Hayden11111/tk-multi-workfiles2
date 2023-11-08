@@ -123,7 +123,7 @@ class WorkFiles(object):
         handler = WorkFiles(use_modal_dialog)
         from .file_save_form import FileSaveForm
 
-        handler._show_file_dlg("File Save", FileSaveForm)
+        handler._show_file_dlg("Snapshot", FileSaveForm)
 
     def _show_file_dlg(self, dlg_name, form, *args):
         """

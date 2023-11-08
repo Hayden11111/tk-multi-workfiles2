@@ -37,6 +37,13 @@ spinner_widget = sgtk.platform.import_framework(
 )
 SpinnerWidget = spinner_widget.SpinnerWidget
 
+
+# Spinner/busy widget:
+thumbnail_widget = sgtk.platform.import_framework(
+    "tk-framework-qtwidgets", "screen_grab"
+)
+ThumbnailWidget = thumbnail_widget.ScreenGrabber
+
 # Grouped list view, widget base class and delegates:
 views = sgtk.platform.import_framework("tk-framework-qtwidgets", "views")
 GroupedListView = views.GroupedListView

@@ -84,6 +84,8 @@ class Ui_FileSaveForm(object):
         self.browser.setStyleSheet("#browser {\n"
 "background-color: rgb(255, 128, 0);\n"
 "}")
+
+        self.snap_shot_input_layout = QtGui.QHBoxLayout()
         self.browser.setObjectName("browser")
         self.verticalLayout_3.addWidget(self.browser)
         self.verticalLayout_3.setStretch(1, 1)
@@ -93,6 +95,37 @@ class Ui_FileSaveForm(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         self.verticalLayout.addWidget(self.line)
+
+
+        self.details_item = QtGui.QWidget()
+        self.details_item.setObjectName("details_item")
+
+
+
+
+        self.item_thumbnail_label = QtGui.QLabel(self.details_item)
+        self.item_thumbnail_label.setObjectName("item_thumbnail_label")
+        #self.gridLayout_3.addWidget(self.item_thumbnail_label, 0, 2, 1, 1)
+        self.item_thumbnail = Thumbnail(self.details_item)
+        self.item_thumbnail.setMinimumSize(QtCore.QSize(160, 90))
+        self.item_thumbnail.setMaximumSize(QtCore.QSize(160, 90))
+        self.item_thumbnail.setText("")
+        self.item_thumbnail.setScaledContents(False)
+        self.item_thumbnail.setAlignment(QtCore.Qt.AlignCenter)
+        self.item_thumbnail.setObjectName("item_thumbnail")
+
+        self.item_description_label = QtGui.QLabel(self.details_item)
+        self.item_description_label.setObjectName("item_description_label")
+        #self.gridLayout_3.addWidget(self.item_description_label, 0, 1, 1, 1)
+
+        self.item_comments = SnapshotDescriptionEdit(self.details_item)
+        self.item_comments.setSizePolicy(sizePolicy)
+        self.item_comments.setMinimumSize(QtCore.QSize(0, 90))
+        self.item_comments.setMaximumSize(QtCore.QSize(16777215, 90))
+        self.item_comments.setObjectName("item_comments")
+
+
+
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setSpacing(20)
         self.verticalLayout_2.setContentsMargins(12, 4, 12, 4)
@@ -230,6 +263,16 @@ class Ui_FileSaveForm(object):
         self.feedback_stacked_widget.addWidget(self.warning_page)
         self.verticalLayout_2.addWidget(self.feedback_stacked_widget)
         self.verticalLayout_2.setStretch(1, 1)
+        #self.horizontalLayout_9.addLayout(self.horizontalLayout_2)
+        self.snap_shot_input_layout.addWidget(self.item_thumbnail_label)
+        self.snap_shot_input_layout.addWidget(self.item_thumbnail)
+        self.snap_shot_input_layout.addWidget(self.item_description_label)
+        self.snap_shot_input_layout.addWidget(self.item_comments)
+
+        self.verticalLayout_2.addLayout(self.snap_shot_input_layout)
+
+
+        #self.horizontalLayout_9.setStretch(1, 1)
         self.verticalLayout.addLayout(self.verticalLayout_2)
         spacerItem3 = QtGui.QSpacerItem(20, 0, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem3)
@@ -281,7 +324,15 @@ class Ui_FileSaveForm(object):
         self.warning_label.setText(QtGui.QApplication.translate("FileSaveForm", "<html><head/><body><p><span style=\" font-weight:600; color:rgb(226, 146, 0)\">Warning:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.cancel_btn.setText(QtGui.QApplication.translate("FileSaveForm", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.save_btn.setText(QtGui.QApplication.translate("FileSaveForm", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.item_description_label.setText(QtGui.QApplication.translate("Dialog", "Description:", None, QtGui.QApplication.UnicodeUTF8))
+        self.item_comments.setAccessibleName( QtGui.QApplication.translate("Dialog", "item description", None, QtGui.QApplication.UnicodeUTF8))
+        self.item_thumbnail_label.setText(QtGui.QApplication.translate("Dialog", "Thumbnail:", None, QtGui.QApplication.UnicodeUTF8))
+        self.item_thumbnail.setToolTip(QtGui.QApplication.translate("Dialog", "Click to take a screenshot.", None, QtGui.QApplication.UnicodeUTF8))
+        self.item_thumbnail.setAccessibleName(QtGui.QApplication.translate("Dialog", "item thumbnail", None, QtGui.QApplication.UnicodeUTF8))
+
 
 from ..framework_qtwidgets import NavigationWidget, BreadcrumbWidget, ElidedLabel
+from ..snapshot_description_edit import SnapshotDescriptionEdit
 from ..browser_form import BrowserForm
+from ..thumbnail import Thumbnail
 from . import resources_rc
