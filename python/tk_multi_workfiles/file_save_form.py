@@ -21,6 +21,8 @@ from itertools import chain
 import sgtk
 from sgtk.platform.qt import QtCore, QtGui
 from sgtk import TankError
+import tank
+import tempfile
 
 from .file_form_base import FileFormBase
 from .ui.file_save_form import Ui_FileSaveForm
