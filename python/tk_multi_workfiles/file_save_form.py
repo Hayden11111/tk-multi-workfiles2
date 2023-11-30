@@ -687,11 +687,13 @@ class FileSaveForm(FileFormBase):
         if self._ui.item_thumbnail is None:
             return None
 
+        app = sgtk.platform.current_bundle()
+        temp_folder = r"C:/local_pipe/Temp"
+        app.ensure_folder_exists(temp_folder)
+        
         temp_path = tempfile.NamedTemporaryFile(
-            suffix=".png", prefix="sgtk_thumb", delete=False, dir="C:/local_pipe/temp"
+            suffix=".png", prefix="sgtk_thumb", delete=False, dir=temp_folder
         ).name
-
-        #temp_path = "C:/local_pipe/temp/snapshot"
 
         success = self._ui.item_thumbnail._thumbnail.save(temp_path)
 
