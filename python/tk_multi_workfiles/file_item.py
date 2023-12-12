@@ -286,7 +286,7 @@ class FileItem(object):
             # If the hook returned a QColor, we'll create a dot badge of that color.
             try:
                 self._badge = app.execute_hook_method(
-                    "hook_get_badge", "generate_badge_pixmap", badge_color=self._badge
+                    "hook_get_badge", "generate_badge_pixmap", badge_color=self._badge, work_file_details=self._details
                 )
             except Exception:
                 # Capture exceptions raised here and log them, so as not to break
@@ -578,6 +578,7 @@ class FileItem(object):
             tooltip += "<hr>"
             tooltip += "<b>Modified by:</b><br>"
             tooltip += self.format_modified_by_details(single_line=True)
+            tooltip += self._details.get("description")
 
             if latest_publish_version:
                 # also add some information about the most recent publish:

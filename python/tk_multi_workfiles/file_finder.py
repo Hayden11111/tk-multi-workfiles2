@@ -624,6 +624,7 @@ class FileFinder(QtCore.QObject):
                 "thumbnail": work_file.get("thumbnail"),
                 "modified_at": work_file.get("modified_at"),
                 "modified_by": work_file.get("modified_by", {}),
+                "badge": work_file.get("badge")
             }
 
             # Find additional information:
