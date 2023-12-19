@@ -872,7 +872,8 @@ class FileSaveForm(FileFormBase):
         # Gather Additional data for hook
         thumbnail_path = self.get_thumbnail_as_path()
         description = self.get_item_description()
-        file_saved = action.execute(self, image=thumbnail_path, description=description)
+        keep_checked_out = self._ui.checkIn_btn.isChecked()
+        file_saved = action.execute(self, image=thumbnail_path, description=description, keep_checked_out=keep_checked_out)
 
         if file_saved:
             # Execute hook for saving additional user login.

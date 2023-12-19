@@ -293,6 +293,10 @@ class Ui_FileSaveForm(object):
         self.save_btn.setDefault(True)
         self.save_btn.setObjectName("save_btn")
         self.horizontalLayout_4.addWidget(self.save_btn)
+        self.checkIn_btn = QtGui.QCheckBox(FileSaveForm)
+        self.checkIn_btn.setObjectName("checkIn_btn")
+        self.checkIn_btn.setChecked(True)
+        self.horizontalLayout_4.addWidget(self.checkIn_btn)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.verticalLayout.setStretch(0, 1)
 
@@ -305,6 +309,7 @@ class Ui_FileSaveForm(object):
         FileSaveForm.setTabOrder(self.file_type_menu, self.cancel_btn)
         FileSaveForm.setTabOrder(self.cancel_btn, self.save_btn)
         FileSaveForm.setTabOrder(self.save_btn, self.expand_checkbox)
+        FileSaveForm.setTabOrder(self.expand_checkbox, self.checkIn_btn)
 
     def retranslateUi(self, FileSaveForm):
         FileSaveForm.setWindowTitle(QtGui.QApplication.translate("FileSaveForm", "Form", None, QtGui.QApplication.UnicodeUTF8))
@@ -324,6 +329,7 @@ class Ui_FileSaveForm(object):
         self.warning_label.setText(QtGui.QApplication.translate("FileSaveForm", "<html><head/><body><p><span style=\" font-weight:600; color:rgb(226, 146, 0)\">Warning:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.cancel_btn.setText(QtGui.QApplication.translate("FileSaveForm", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.save_btn.setText(QtGui.QApplication.translate("FileSaveForm", "Save", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkIn_btn.setText(QtGui.QApplication.translate("FileSaveForm", "Keep Checked Out", None, QtGui.QApplication.UnicodeUTF8))
         self.item_description_label.setText(QtGui.QApplication.translate("Dialog", "Description:", None, QtGui.QApplication.UnicodeUTF8))
         self.item_comments.setAccessibleName( QtGui.QApplication.translate("Dialog", "item description", None, QtGui.QApplication.UnicodeUTF8))
         self.item_thumbnail_label.setText(QtGui.QApplication.translate("Dialog", "Thumbnail:", None, QtGui.QApplication.UnicodeUTF8))
