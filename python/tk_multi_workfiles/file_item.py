@@ -578,7 +578,8 @@ class FileItem(object):
             tooltip += "<hr>"
             tooltip += "<b>Modified by:</b><br>"
             tooltip += self.format_modified_by_details(single_line=True)
-            tooltip += self._details.get("description")
+            if self._details.get("description"):
+                tooltip += self._details.get("description")
 
             if latest_publish_version:
                 # also add some information about the most recent publish:
