@@ -72,6 +72,11 @@ configuration:
     # Hooks
     #
 
+    hook_find_work_files:
+      type: hook
+      default_value: "{self}/find_work_files.py"
+      description: modify how files are found
+
     hook_scene_operation:
         type: hook
         default_value: "{self}/scene_operation_{engine_name}.py"
