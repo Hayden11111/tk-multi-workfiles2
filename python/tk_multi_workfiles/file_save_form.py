@@ -456,13 +456,22 @@ class FileSaveForm(FileFormBase):
             path = None
 
         if not app.get_setting("allow_file_save_overwrites"):
+            overwrite_error = False
+            # We are in a file
             if self.current_work_file:
                 # Compare the Current path to the next path it's okay to be the same
                 current_file = self.current_work_file.path.encode('utf8').replace("/", "\\")
                 if path != current_file:
                     # Don't allow overwriting
                     if os.path.isfile(path):
-                        raise TankError("File already exists with this name!")
+                        overwrite_error = True
+            else:
+                if os.path.isfile(path):
+                    overwrite_error = True
+
+            if overwrite_error:
+                raise TankError("File already exists with this name!")
+
 
         return {"path": path, "version": version, "next_version": next_version}
 
