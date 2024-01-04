@@ -185,6 +185,8 @@ class FileSaveForm(FileFormBase):
             self._ui.expand_checkbox.setChecked(True)
             self._on_expand_toggled(True)
 
+        self.current_work_file = current_file
+
     # ------------------------------------------------------------------------------------------
     # protected methods
 
@@ -452,6 +454,14 @@ class FileSaveForm(FileFormBase):
             # otherwise it's ok to not have a path!
             app.log_debug("Unable to generate preview path: %s" % e)
             path = None
+
+        if not app.get_setting("allow_file_save_overwrites"):
+        # Compare the Current path to the next path it's okay to be the same
+            current_file = self.current_work_file.path.encode('utf8').replace("/", "\\")
+            if path != current_file:
+                # Don't allow overwriting
+                if os.path.isfile(path):
+                    raise TankError("File already exists with this name!")
 
         return {"path": path, "version": version, "next_version": next_version}
 

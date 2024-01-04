@@ -236,6 +236,12 @@ configuration:
       allows_empty: True
       default_value: []
 
+    allow_file_save_overwrites:
+      type: bool
+      description: When saving a file as new file, can we save over an existing file.
+      default_value: False
+
+
     allow_task_creation:
         type: bool
         description: Controls whether new tasks can be created from the app.

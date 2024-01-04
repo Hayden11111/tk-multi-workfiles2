@@ -578,7 +578,13 @@ class FileItem(object):
             tooltip += "<hr>"
             tooltip += "<b>Modified by:</b><br>"
             tooltip += self.format_modified_by_details(single_line=True)
+            if self._details.get("source_control_state"):
+                tooltip += "<hr>"
+                tooltip += "<b>Source Control:</b><br>"
+                tooltip += self._details.get("source_control_state")
             if self._details.get("description"):
+                tooltip += "<hr>"
+                tooltip += "<b>Description:</b><br>"
                 tooltip += self._details.get("description")
 
             if latest_publish_version:
