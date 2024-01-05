@@ -596,7 +596,8 @@ class FileFinder(QtCore.QObject):
                 "modified_at": work_file.get("modified_at"),
                 "modified_by": work_file.get("modified_by", {}),
                 "badge": work_file.get("badge"),
-                "source_control_state": work_file.get("source_control_state")
+                "source_control_state": work_file.get("source_control_state"),
+                "additional_data": work_file.get("additional_data",{})
             }
 
             # Find additional information:

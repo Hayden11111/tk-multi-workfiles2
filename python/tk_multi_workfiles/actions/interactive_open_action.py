@@ -328,6 +328,7 @@ class InteractiveOpenAction(OpenFileAction):
             env.context,
             parent_ui,
             check_refs=True,
+            **file._details['additional_data']
         )
 
     def _open_previous_publish(self, file, env, parent_ui):

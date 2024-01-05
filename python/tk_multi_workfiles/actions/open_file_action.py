@@ -56,6 +56,7 @@ class OpenFileAction(FileAction):
         new_ctx,
         parent_ui,
         check_refs=False,
+        **kwargs
     ):
         """
         Copies src_path to dst_path, creates folders, restarts the engine and then opens
@@ -164,7 +165,7 @@ class OpenFileAction(FileAction):
         # open file
         try:
             is_file_opened = open_file(
-                self._app, OPEN_FILE_ACTION, new_ctx, dst_path, version, read_only
+                self._app, OPEN_FILE_ACTION, new_ctx, dst_path, version, read_only, **kwargs
             )
         except Exception as e:
             if not self.__handle_open_file_exception(

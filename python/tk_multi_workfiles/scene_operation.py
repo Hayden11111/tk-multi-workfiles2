@@ -142,7 +142,7 @@ def save_file(app, action, context, path=None,**kwargs):
         _do_scene_operation(app, action, context, "save", **kwargs)
 
 
-def open_file(app, action, context, path, version, read_only):
+def open_file(app, action, context, path, version, read_only, **kwargs):
     """
     Use hook to open the specified file.
     """
@@ -157,6 +157,7 @@ def open_file(app, action, context, path, version, read_only):
         version,
         read_only,
         result_types=(bool, type(None)),
+        **kwargs
     )
 
 

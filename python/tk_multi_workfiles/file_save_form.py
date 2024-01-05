@@ -17,6 +17,7 @@ the list of current work files.
 import os
 import traceback
 from itertools import chain
+import six
 
 import sgtk
 from sgtk.platform.qt import QtCore, QtGui
@@ -460,7 +461,7 @@ class FileSaveForm(FileFormBase):
             # We are in a file
             if self.current_work_file:
                 # Compare the Current path to the next path it's okay to be the same
-                current_file = self.current_work_file.path.encode('utf8').replace("/", "\\")
+                current_file = six.ensure_str(self.current_work_file.path).replace("/", "\\")
                 if path != current_file:
                     # Don't allow overwriting
                     if os.path.isfile(path):
