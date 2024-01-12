@@ -460,8 +460,13 @@ class FileSaveForm(FileFormBase):
             overwrite_error = False
             # We are in a file
             if self.current_work_file:
+                result = self.current_work_file.path
+                if six.PY2:
+                    # In Python 2, decode the result if it's a byte string
+                    if isinstance(result, str):
+                        result = result.decode("utf-8")
                 # Compare the Current path to the next path it's okay to be the same
-                current_file = six.ensure_str(self.current_work_file.path).replace("/", "\\")
+                current_file = result.replace("/", "\\")
                 if path != current_file:
                     # Don't allow overwriting
                     if os.path.isfile(path):
