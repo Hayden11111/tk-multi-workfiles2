@@ -188,6 +188,11 @@ class FileSaveForm(FileFormBase):
 
         self.current_work_file = current_file
 
+        screen_shot = app.execute_hook("screenshot_hook", ctx=app.context)
+        if screen_shot:
+            self._ui.item_thumbnail.set_thumbnail(screen_shot)
+
+
     # ------------------------------------------------------------------------------------------
     # protected methods
 
@@ -698,6 +703,8 @@ class FileSaveForm(FileFormBase):
 
         :returns: Path to a file on disk or None if no thumbnail set
         """
+
+
 
         # the thumbnail path was explicitly provided
         if self._thumbnail_path:

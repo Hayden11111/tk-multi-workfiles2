@@ -124,6 +124,11 @@ configuration:
         description: Contains methods to retrieve custom user login and push user data when a
                      work file is saved.
 
+    screenshot_hook:
+      type: hook
+      default_value: "{self}/default_thumbnail_screenshot.py"
+      description: Set the default thumbnail for the snapshot preview.
+
     # General preferences
     #
     entities:
