@@ -17,7 +17,7 @@ the list of current work files.
 import os
 import traceback
 from itertools import chain
-import six
+from tank_vendor import six
 
 import sgtk
 from sgtk.platform.qt import QtCore, QtGui

@@ -47,6 +47,7 @@ class FileOpenForm(FileFormBase):
             # doing this inside a try-except to ensure any exceptions raised don't
             # break the UI and crash the dcc horribly!
             self._do_init()
+            hook_result = self._app.execute_hook("custom_button_file_open_hook", button=self._ui.custom_button)
         except Exception:
             self._app.log_exception("Unhandled exception during Form construction!")
 
