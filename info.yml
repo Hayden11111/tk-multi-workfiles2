@@ -224,6 +224,16 @@ configuration:
       default_value:
         - [task_assignees, is, '{context.user}']
 
+    name_display_label:
+      type: str
+      description: The display name given for the Name field in the save window.
+      default_value: "Name:"
+
+    name_input_text_placeholder:
+      type: str
+      description: The display name given for the Name field in the save window.
+      default_value: ""
+
     file_extensions:
         type: list
         description: List of file extensions to be shown in the work files view. If
@@ -298,6 +308,14 @@ configuration:
                    incremented.  If False then a new unique name will be used and the version
                    reset
       default_value: False
+
+    additional_supported_engines:
+      type: list
+      description: Engine that allow launch at startup
+      values:
+        type: str
+      allows_empty: True
+      default_value: []
 
 # the Shotgun fields that this app needs in order to operate correctly
 requires_shotgun_fields:

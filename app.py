@@ -75,7 +75,7 @@ class MultiWorkFiles(sgtk.platform.Application):
         if self.get_setting("show_file_save"):
             # register the file save command
             self.engine.register_command(
-                "Snapshot...",
+                "File Save...",
                 self.show_file_save_dlg,
                 {
                     "short_name": "file_save",
@@ -98,7 +98,7 @@ class MultiWorkFiles(sgtk.platform.Application):
         # the behaviour can be very different.
         #
         # currently, we have done QA on the following engines:
-        SUPPORTED_ENGINES = ["tk-nuke", "tk-maya", "tk-3dsmax", "tk-substance-painter", "tk-blender"]
+        SUPPORTED_ENGINES = ["tk-nuke", "tk-maya", "tk-3dsmax"] + self.get_setting("additional_supported_engines")
 
         if not hasattr(sgtk, "_tk_multi_workfiles2_launch_at_startup"):
 

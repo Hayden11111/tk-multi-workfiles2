@@ -192,6 +192,11 @@ class FileSaveForm(FileFormBase):
         if screen_shot:
             self._ui.item_thumbnail.set_thumbnail(screen_shot)
 
+        app = sgtk.platform.current_bundle()
+        display_label_text = app.get_setting("name_display_label")
+        placeholder_text = app.get_setting("name_input_text_placeholder")
+        self._ui.name_label.setText(display_label_text)
+        self._ui.name_edit.setPlaceholderText(placeholder_text)
 
     # ------------------------------------------------------------------------------------------
     # protected methods
@@ -312,7 +317,7 @@ class FileSaveForm(FileFormBase):
         # update version controls:
         version = result.get("version") or 1
         next_version = result.get("next_version") or 1
-        self._update_version_spinner(version, next_version)
+        self._update_version_spinner(version, version) #  Removed for perforce revision
 
         self._enable_save()
 
@@ -442,7 +447,7 @@ class FileSaveForm(FileFormBase):
             next_version = max_version + 1
 
             # update version:
-            version = next_version if use_next_version else max(version, next_version)
+            version = next_version if use_next_version else max(1, next_version - 1)
             fields["version"] = version
         else:
             # version isn't used!
