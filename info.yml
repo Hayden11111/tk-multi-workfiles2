@@ -207,6 +207,11 @@ configuration:
         description: Automatically expands the root level of the treeviews.
         default_value: False
 
+    version_up_checkbox:
+      type: bool
+      description: The state of the version up checkbox
+      default_value: False
+
     my_tasks_extra_display_fields:
       type: list
       description: List of additional fields to display with the task in the My Tasks list.

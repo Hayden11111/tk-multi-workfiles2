@@ -136,8 +136,8 @@ class FileSaveForm(FileFormBase):
         self.window().resize(self.minimumSizeHint())
 
         # default state for the version controls is to use the next available version:
-        self._ui.use_next_available_cb.setChecked(True)
-        self._ui.version_spinner.setEnabled(False)
+        self._ui.use_next_available_cb.setChecked(app.get_setting("version_up_checkbox"))
+        self._ui.version_spinner.setEnabled(not app.get_setting("version_up_checkbox"))
 
         # hook up signals on controls:
         self._ui.save_btn.clicked.connect(self._on_save)
