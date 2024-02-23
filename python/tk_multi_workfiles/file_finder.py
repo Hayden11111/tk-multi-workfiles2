@@ -589,6 +589,7 @@ class FileFinder(QtCore.QObject):
             file_details = {
                 "path": path,
                 "version": work_file.get("version_number"),
+                "revision": work_file.get("revision"),
                 "name": work_file.get("name"),
                 "task": work_file.get("task"),
                 "description": work_file.get("description"),

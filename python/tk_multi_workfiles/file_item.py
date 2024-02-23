@@ -164,6 +164,13 @@ class FileItem(object):
         return self._details.get("version") or self._publish_details.get("version", 0)
 
     @property
+    def revision(self):
+        """
+        :returns:   The version number of this file
+        """
+        return self._details.get("revision") or self._publish_details.get("sg_revision", None)
+
+    @property
     def entity(self):
         """
         :returns:   The Shotgun entity dictionary that this file is associated with

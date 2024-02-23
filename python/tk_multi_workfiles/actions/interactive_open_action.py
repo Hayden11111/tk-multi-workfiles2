@@ -181,6 +181,9 @@ class InteractiveOpenAction(OpenFileAction):
             env.context,
             parent_ui,
             check_refs=True,
+            revision=file._details.get('revision'),
+            file_item=file._details,
+            **file._details['additional_data']
         )
 
     def _open_publish_with_check(
@@ -328,6 +331,8 @@ class InteractiveOpenAction(OpenFileAction):
             env.context,
             parent_ui,
             check_refs=True,
+            revision=file._details.get('revision'),
+            file_item=file._details,
             **file._details['additional_data']
         )
 
