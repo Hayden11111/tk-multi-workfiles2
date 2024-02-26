@@ -103,7 +103,7 @@ class OpenFileAction(FileAction):
 
         # reset the current scene:
         try:
-            if not reset_current_scene(self._app, OPEN_FILE_ACTION, new_ctx):
+            if not reset_current_scene(self._app, OPEN_FILE_ACTION, new_ctx, **kwargs):
                 self._app.log_debug("Failed to reset the current scene!")
                 return False
         except Exception as e:

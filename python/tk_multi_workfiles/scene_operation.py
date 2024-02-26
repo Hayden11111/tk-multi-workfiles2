@@ -113,12 +113,12 @@ def get_current_path(app, action, context):
     )
 
 
-def reset_current_scene(app, action, context):
+def reset_current_scene(app, action, context, **kwargs):
     """
     Use hook to clear the current scene
     """
     app.log_debug("Resetting the current scene via hook")
-    return _do_scene_operation(app, action, context, "reset", result_types=(bool,))
+    return _do_scene_operation(app, action, context, "reset", result_types=(bool,), **kwargs)
 
 
 def prepare_new_scene(app, action, context):

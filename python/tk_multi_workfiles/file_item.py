@@ -62,7 +62,7 @@ class FileItem(object):
         ignore_fields = ignore_fields or []
         # always want to ignore 'version' and 'extension' if they are present in the fields
         # dictionary
-        ignore_fields += ["version", "extension"]
+        ignore_fields += ["extension"]
 
         # populate the file key from the fields passed in that are included in
         # the template, skipping the ignore fields:
@@ -88,7 +88,8 @@ class FileItem(object):
                 and key.name not in file_key
             ):
                 file_key[key.name] = key.default
-
+        file_key["revision"] = fields.get("revision", 1)
+        #file_key["iteration"] = fields.get("iteration", 1)
         # return an immutable representation of the sorted dictionary:
         # e.g. (('sequence', 'Sequence01'), ('shot', 'shot_010'), ('name', 'foo'))
         return tuple(sorted(file_key.items()))
@@ -556,7 +557,7 @@ class FileItem(object):
                     latest_publish_version = self.versions[max_pub_version]
 
         # add the file name and version:
-        tooltip += "<b>%s, v%03d</b><br>" % (self.name, self.version)
+        tooltip += "<b>%s, #%s</b><br>" % (self.name, self.revision)
 
         # add in some text describing if this is the latest version or not.
         if latest_version == self:
@@ -638,9 +639,11 @@ class FileItem(object):
         if self.key == other.key:
             # see if we can get away with just comparing versions:
             if self.version > other.version:
-                return 1
+                if self.revision > other.revision:
+                    return 1
             elif self.version < other.version:
-                return -1
+                if self.revision < other.revision:
+                    return -1
             else:
                 # same version so we'll need to look further!
                 pass
@@ -721,9 +724,10 @@ class FileItem(object):
         """
         :returns:   A string representation of this instance - useful for debugging
         """
-        return "%s (v%d), is_local:%s, is_publish: %s" % (
+        return "%s (v%d), (#%s) is_local:%s, is_publish: %s" % (
             self.name,
             self.version,
+            self.revision,
             self.is_local,
             self.is_published,
         )

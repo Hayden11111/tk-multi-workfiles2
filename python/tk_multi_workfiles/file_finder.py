@@ -273,6 +273,8 @@ class FileFinder(QtCore.QObject):
             # All files that share the same key are considered
             # to be different versions of the same file.
             #
+            wf_fields["revision"] = work_file.get("revision", 1)
+            wf_fields["iteration"] = work_file.get("version", 1)
             file_key = FileItem.build_file_key(
                 wf_fields, work_template, version_compare_ignore_fields
             )

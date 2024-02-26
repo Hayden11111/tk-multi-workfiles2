@@ -407,7 +407,7 @@ class FileModel(QtGui.QStandardItemModel):
         if not file_item:
             return []
         return self._find_current_items(
-            None, file_item.key, file_item.version if not ignore_version else None
+            None, file_item.key, file_item.version if not ignore_version else None, file_item.revision
         )
 
     # Interface for modifying the entities in the model:
@@ -798,7 +798,7 @@ class FileModel(QtGui.QStandardItemModel):
 
         for model_item in self._file_items(group_item):
             file_item = model_item.file_item
-            file_version_key = (file_item.key, file_item.version)
+            file_version_key = (file_item.key, file_item.version, file_item.revision)
             existing_file_item_map[file_version_key] = (file_item, model_item)
             if file_item.is_local:
                 prev_local_file_versions.add(file_version_key)
@@ -824,7 +824,7 @@ class FileModel(QtGui.QStandardItemModel):
         # match files against existing items:
         files_to_add = []
         for file_item in files:
-            file_version_key = (file_item.key, file_item.version)
+            file_version_key = (file_item.key,file_item.version, file_item.revision)
             current_file, model_item = existing_file_item_map.get(
                 file_version_key, (None, None)
             )
@@ -860,6 +860,7 @@ class FileModel(QtGui.QStandardItemModel):
                     group_item.key,
                     file_item.key,
                     file_item.version,
+                    file_item.revision,
                 )
 
         # figure out if any existing items are no longer needed:
@@ -951,7 +952,7 @@ class FileModel(QtGui.QStandardItemModel):
                     found_items.append(item)
         return found_items
 
-    def _find_file_items(self, file_map, file_key, file_version):
+    def _find_file_items(self, file_map, file_key, file_version, revision=None):
         """
         Find current model items for the specified file key and version in the specified map.  If file key
         is None then all items that match the version are returned.
@@ -972,7 +973,7 @@ class FileModel(QtGui.QStandardItemModel):
                 found_items.extend(self._find_version_items(version_map, file_version))
         return found_items
 
-    def _find_current_items(self, group_key, file_key, file_version):
+    def _find_current_items(self, group_key, file_key, file_version, revision=None):
         """
         Find current model items for the specified group key, file key and file version.  If group key
         is None then all items that match the file key and version are returned.
@@ -1212,7 +1213,7 @@ class FileModel(QtGui.QStandardItemModel):
         if uid not in self._pending_thumbnail_requests:
             # the completed work is of no interest to us!
             return
-        (group_key, file_key, file_version) = self._pending_thumbnail_requests[uid]
+        (group_key, file_key, file_version, revision) = self._pending_thumbnail_requests[uid]
         del self._pending_thumbnail_requests[uid]
 
         # extract the thumbnail path and QImage from the data/result
@@ -1222,7 +1223,7 @@ class FileModel(QtGui.QStandardItemModel):
             return
 
         # find all file items for this file:
-        model_items = self._find_current_items(group_key, file_key, file_version)
+        model_items = self._find_current_items(group_key, file_key, file_version, revision)
         if not model_items:
             return
 
@@ -1338,7 +1339,7 @@ class FileModel(QtGui.QStandardItemModel):
 
                     # emit a data changed signal for any model items that are affected:
                     version_items = self._find_current_items(
-                        group_key, version.key, version.version
+                        group_key, version.key, version.version, version.revision
                     )
                     for item in version_items:
                         item.emitDataChanged()

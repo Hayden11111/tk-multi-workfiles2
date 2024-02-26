@@ -426,6 +426,8 @@ class FileSaveForm(FileFormBase):
                 file_versions = self._file_model.get_cached_file_versions(
                     file_key, env, clean_only=True
                 )
+                if file_versions:
+                    file_versions = list(set(v.path for k, v in file_versions.items()))
             if file_versions == None:
                 # fall back to finding the files manually - this will be slower!
                 try:
@@ -441,9 +443,9 @@ class FileSaveForm(FileFormBase):
                     )
                 except TankError as e:
                     raise TankError("Failed to find files for this work area: %s" % e)
-                file_versions = [f.version for f in files]
+                file_versions = list(set(f.path for f in files))
 
-            max_version = max(file_versions or [0])
+            max_version = max(len(file_versions), 0)
             next_version = max_version + 1
 
             # update version:
@@ -618,6 +620,7 @@ class FileSaveForm(FileFormBase):
             # update the version spinner:
             use_next_version = self._ui.use_next_available_cb.isChecked()
             version_to_set = version + 1
+            min_ver = version + 1
             if not use_next_version:
                 spinner_version = self._ui.version_spinner.value()
                 version_to_set = max(version_to_set, spinner_version)

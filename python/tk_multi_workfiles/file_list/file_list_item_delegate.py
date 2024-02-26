@@ -72,7 +72,7 @@ class FileListItemDelegate(GroupedListViewItemDelegate):
             if file_item:
                 # build labels:
                 label = "<b>%s<b>" % file_item.name
-                subtitle += "v%03d" % file_item.version
+                subtitle += "Revision #%s" % file_item.revision
                 if file_item.is_published:
                     subtitle += "<br>%s" % file_item.format_published_by_details()
                 elif file_item.is_local:
