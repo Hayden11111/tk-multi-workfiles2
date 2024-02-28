@@ -418,38 +418,42 @@ class FileSaveForm(FileFormBase):
             # version is used so we need to find the latest version - this means
             # searching for files...
             # need a file key to find all versions so lets build it:
-            file_key = FileItem.build_file_key(
-                fields, env.work_template, env.version_compare_ignore_fields
-            )
-            file_versions = None
-            if self._file_model:
-                file_versions = self._file_model.get_cached_file_versions(
-                    file_key, env, clean_only=True
-                )
-                if file_versions:
-                    file_versions = list(set(v.path for k, v in file_versions.items()))
-            if file_versions == None:
-                # fall back to finding the files manually - this will be slower!
-                try:
-                    finder = FileFinder()
-                    files = (
-                            finder.find_files(
-                                env.work_template,
-                                env.publish_template,
-                                env.context,
-                                file_key,
-                            )
-                            or []
-                    )
-                except TankError as e:
-                    raise TankError("Failed to find files for this work area: %s" % e)
-                file_versions = list(set(f.path for f in files))
+            #file_key = FileItem.build_file_key(
+            #    fields, env.work_template, env.version_compare_ignore_fields
+            #)
+            #file_versions = None
+            #if self._file_model:
+            #    file_versions = self._file_model.get_cached_file_versions(
+            #        file_key, env, clean_only=True
+            #    )
+            #    if file_versions:
+            #        file_versions = list(set(v.path for k, v in file_versions.items()))
+            #if file_versions == None:
+            #    # fall back to finding the files manually - this will be slower!
+            #    try:
+            #        finder = FileFinder()
+            #        files = (
+            #                finder.find_files(
+            #                    env.work_template,
+            #                    env.publish_template,
+            #                    env.context,
+            #                    file_key,
+            #                )
+            #                or []
+            #        )
+            #    except TankError as e:
+            #        raise TankError("Failed to find files for this work area: %s" % e)
+            #    file_versions = list(set(f.path for f in files))
 
-            max_version = max(len(file_versions), 0)
-            next_version = max_version + 1
+            work_fields = env.work_template.get_fields(self.current_work_file.path)
+            current_version = work_fields['version']
 
-            # update version:
-            version = next_version if use_next_version else max(1, next_version - 1)
+            if use_next_version:
+                next_version = version
+                version = current_version + 1
+            else:
+                version = version + 1 if use_next_version else current_version
+                next_version = version + 1
             fields["version"] = version
         else:
             # version isn't used!
@@ -624,7 +628,7 @@ class FileSaveForm(FileFormBase):
             if not use_next_version:
                 spinner_version = self._ui.version_spinner.value()
                 version_to_set = max(version_to_set, spinner_version)
-            self._update_version_spinner(version_to_set, version + 1)
+            self._update_version_spinner(version_to_set, version)
 
     def _on_work_area_changed(self, env):
         """ """
