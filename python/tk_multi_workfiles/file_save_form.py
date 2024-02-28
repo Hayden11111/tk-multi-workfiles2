@@ -445,8 +445,11 @@ class FileSaveForm(FileFormBase):
             #        raise TankError("Failed to find files for this work area: %s" % e)
             #    file_versions = list(set(f.path for f in files))
 
-            work_fields = env.work_template.get_fields(self.current_work_file.path)
-            current_version = work_fields['version']
+            if self.current_work_file:
+                work_fields = env.work_template.get_fields(self.current_work_file.path)
+                current_version = work_fields['version']
+            else:
+                current_version = 1
 
             if use_next_version:
                 next_version = version
