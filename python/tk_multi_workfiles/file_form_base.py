@@ -36,6 +36,7 @@ from .scene_operation import get_current_path, SAVE_FILE_AS_ACTION
 from .file_item import FileItem
 from .work_area import WorkArea
 from .actions.new_task_action import NewTaskAction
+from .actions.new_asset_action import NewAssetAction
 from .actions.file_action import FileAction
 from .user_cache import g_user_cache
 from .util import monitor_qobject_lifetime, resolve_filters, get_sg_entity_name_field
@@ -96,6 +97,7 @@ class FileFormBase(QtGui.QWidget):
         # hook up signals on controls:
         self._ui.cancel_btn.clicked.connect(self._on_cancel)
         self._ui.browser.create_new_task.connect(self._on_create_new_task)
+        self._ui.browser.create_new_asset.connect(self._on_create_new_asset)
         self._ui.browser.work_area_changed.connect(self._on_browser_work_area_changed)
         self._ui.browser.step_filter_changed.connect(self._apply_step_filtering)
         self._ui.nav.navigate.connect(self._on_navigate)
@@ -283,6 +285,15 @@ class FileFormBase(QtGui.QWidget):
         file_model = FileModel(self._bg_task_manager, parent=self)
         monitor_qobject_lifetime(file_model, "File Model")
         return file_model
+
+    def _on_create_new_asset(self):
+        """
+        Slot triggered when the user requests that a new asset be created.  If a asset is created then
+        all models will be immediately refreshed.
+        """
+        action = NewAssetAction()
+        if action.execute(self):
+            self._refresh_all_async()
 
     def _on_create_new_task(self, entity, step):
         """

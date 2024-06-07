@@ -30,6 +30,9 @@ class Ui_MyTasksForm(object):
         self.horizontalLayout.addItem(spacerItem)
         self.new_task_btn = QtGui.QPushButton(MyTasksForm)
         self.new_task_btn.setObjectName("new_task_btn")
+        self.new_asset_btn = QtGui.QPushButton(MyTasksForm)
+        self.new_asset_btn.setObjectName("new_task_btn")
+        self.horizontalLayout.addWidget(self.new_asset_btn)
         self.horizontalLayout.addWidget(self.new_task_btn)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
@@ -59,5 +62,6 @@ class Ui_MyTasksForm(object):
         MyTasksForm.setWindowTitle(QtGui.QApplication.translate("MyTasksForm", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.filter_btn.setText(QtGui.QApplication.translate("MyTasksForm", "Filter", None, QtGui.QApplication.UnicodeUTF8))
         self.new_task_btn.setText(QtGui.QApplication.translate("MyTasksForm", "+ New Task", None, QtGui.QApplication.UnicodeUTF8))
+        self.new_asset_btn.setText(QtGui.QApplication.translate("MyTasksForm", "+ New Asset", None, QtGui.QApplication.UnicodeUTF8))
 
 from ..framework_qtwidgets import SearchWidget

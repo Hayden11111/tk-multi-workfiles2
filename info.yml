@@ -34,6 +34,11 @@ configuration:
         can save the current workfile to the Toolkit templated folder structure.
       default_value: True
 
+    allow_asset_creation:
+      type: bool
+      description: A flag to enable asset creation.
+      default_value: True
+
     launch_at_startup:
         type: bool
         description: A flag whether to launch the UI at application startup.
@@ -123,6 +128,12 @@ configuration:
         default_value: "{self}/create_new_task.py"
         description: Specify a hook that will create the task and do any input validation that is
                      required.
+
+    create_new_asset_hook:
+      type: hook
+      default_value: "{self}/create_new_asset.py"
+      description: Specify a hook that will create the asset and do any input validation that is
+        required.
 
     user_login_hook:
         type: hook

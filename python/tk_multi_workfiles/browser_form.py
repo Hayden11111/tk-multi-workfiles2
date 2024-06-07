@@ -73,6 +73,7 @@ class BrowserForm(QtGui.QWidget):
             self.tab_index = tab_index
 
     create_new_task = QtCore.Signal(object, object)  # entity, step
+    create_new_asset = QtCore.Signal()
     work_area_changed = QtCore.Signal(object, list)  # entity, breadcrumbs
     breadcrumbs_dropped = QtCore.Signal(list)  # breadcrumbs
     file_selected = QtCore.Signal(object, object)  # file, env
@@ -228,6 +229,7 @@ class BrowserForm(QtGui.QWidget):
             self._my_tasks_form.task_double_clicked.connect(self.task_double_clicked)
             self._ui.task_browser_tabs.addTab(self._my_tasks_form, "My Tasks")
             self._my_tasks_form.create_new_task.connect(self.create_new_task)
+            self._my_tasks_form.create_new_asset.connect(self.create_new_asset)
 
         for caption, step_filter_on, model in entity_models:
             step_entity_filter = None
@@ -252,6 +254,7 @@ class BrowserForm(QtGui.QWidget):
             entity_form.entity_selected.connect(self._on_entity_selected)
             self._ui.task_browser_tabs.addTab(entity_form, caption)
             entity_form.create_new_task.connect(self.create_new_task)
+            entity_form.create_new_asset.connect(self.create_new_asset)
             self._entity_tree_forms.append(entity_form)
 
         if file_model:

@@ -60,6 +60,9 @@ class EntityTreeForm(QtGui.QWidget):
     # Signal emitted when the 'New Task' button is clicked.
     create_new_task = QtCore.Signal(object, object)  # entity, step
 
+    # Signal emitted when the 'New Asset' button is clicked.
+    create_new_asset = QtCore.Signal()
+
     def __init__(
         self,
         entity_model,
@@ -143,6 +146,8 @@ class EntityTreeForm(QtGui.QWidget):
             self._ui.new_task_btn.setEnabled(False)
         else:
             self._ui.new_task_btn.hide()
+
+        self._ui.new_asset_btn.clicked.connect(self._on_new_asset)
 
         self._ui.entity_tree.expanded.connect(self._on_item_expanded)
         self._ui.entity_tree.collapsed.connect(self._on_item_collapsed)
@@ -792,6 +797,13 @@ class EntityTreeForm(QtGui.QWidget):
         path = item.model().get_item_field_value_path(item)
         if path in self._expanded_item_values:
             self._expanded_item_values.remove(path)
+
+    def _on_new_asset(self):
+        """
+        Slot triggered when the new asset button is clicked.
+        """
+
+        self.create_new_asset.emit()
 
     def _on_new_task(self):
         """

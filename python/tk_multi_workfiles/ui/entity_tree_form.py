@@ -26,6 +26,9 @@ class Ui_EntityTreeForm(object):
         self.horizontalLayout.addItem(spacerItem)
         self.new_task_btn = QtGui.QPushButton(EntityTreeForm)
         self.new_task_btn.setObjectName("new_task_btn")
+        self.new_asset_btn = QtGui.QPushButton(EntityTreeForm)
+        self.new_asset_btn.setObjectName("new_task_btn")
+        self.horizontalLayout.addWidget(self.new_asset_btn)
         self.horizontalLayout.addWidget(self.new_task_btn)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
@@ -70,6 +73,7 @@ class Ui_EntityTreeForm(object):
         EntityTreeForm.setWindowTitle(QtGui.QApplication.translate("EntityTreeForm", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.my_tasks_cb.setText(QtGui.QApplication.translate("EntityTreeForm", "My Tasks Only", None, QtGui.QApplication.UnicodeUTF8))
         self.new_task_btn.setText(QtGui.QApplication.translate("EntityTreeForm", "+ New Task", None, QtGui.QApplication.UnicodeUTF8))
+        self.new_asset_btn.setText(QtGui.QApplication.translate("MyTasksForm", "+ New Asset", None, QtGui.QApplication.UnicodeUTF8))
         self.search_ctrl.setAccessibleName(QtGui.QApplication.translate("EntityTreeForm", "Search Entity", None, QtGui.QApplication.UnicodeUTF8))
 
 from ..framework_qtwidgets import SearchWidget
