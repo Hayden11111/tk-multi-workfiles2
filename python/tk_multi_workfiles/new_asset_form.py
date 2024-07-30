@@ -59,6 +59,7 @@ class NewAssetForm(QtGui.QWidget):
         self._selected_template = {}
         self._selected_asset_type = ""
 
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         # set up the UI
         from .ui.new_asset_form import Ui_NewAssetForm
 
@@ -72,6 +73,14 @@ class NewAssetForm(QtGui.QWidget):
             # Take ownership since the widget doesn't.
             validator.setParent(self)
             self._ui.asset_name.setValidator(validator)
+
+        sub_type_validator = self._app.execute_hook_method(
+            "create_new_asset_hook", "create_asset_sub_type_validator"
+        )
+        if sub_type_validator:
+            # Take ownership since the widget doesn't.
+            sub_type_validator.setParent(self)
+            self._ui.custom_sub_type.setValidator(sub_type_validator)
 
         schema = self._app.sgtk.shotgun.schema_field_read('Asset')
 
@@ -87,9 +96,15 @@ class NewAssetForm(QtGui.QWidget):
 
         self.task_templates = self._app.sgtk.shotgun.find("TaskTemplate", [], ["id", "code", "entity_type", "tasks"])
 
+        self._ui.sub_type.addItem("Custom")
+
         # hook up controls:
         self._ui.create_btn.clicked.connect(self._on_create_btn_clicked)
         self._ui.asset_type.currentIndexChanged.connect(self._update_task_template)
+        self._ui.sub_type.currentTextChanged.connect(self.init_custom_sub_type)
+        self._update_task_template(0)
+
+        self.init_custom_sub_type("")
 
         # initialize line to be plain and the same colour as the text:
         self._ui.break_line.setFrameShadow(QtGui.QFrame.Plain)
@@ -100,6 +115,23 @@ class NewAssetForm(QtGui.QWidget):
         )
 
         self._ui.asset_type.setCurrentText("Prop")
+
+    def init_custom_sub_type(self, text):
+        if text == self.custom_flag:
+            self._ui.custom_sub_type.setEnabled(True)
+            self._ui.custom_sub_type.setPlaceholderText("")
+        else:
+            self._ui.custom_sub_type.setEnabled(False)
+            self._ui.custom_sub_type.setPlaceholderText("Select the Custom Sub Type")
+
+    def show(self):
+
+        self.activateWindow()
+        super(NewAssetForm, self).show()
+
+    @property
+    def custom_flag(self):
+        return "Custom"
 
     def _update_task_template(self, x):
         """
@@ -146,7 +178,11 @@ class NewAssetForm(QtGui.QWidget):
         if self._ui.sub_type.currentIndex() == 0:
             return None
         else:
-            return self._ui.sub_type.currentText()
+            current_item = self._ui.sub_type.currentText()
+            if current_item == self.custom_flag:
+                return value_to_str(self._ui.custom_sub_type.text())
+            else:
+                return current_item
 
     def _get_task_template(self):
         current_template = self._ui.task_template.text()

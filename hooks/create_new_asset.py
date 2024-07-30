@@ -50,6 +50,34 @@ class CreateNewAssetHook(HookClass):
 
         return QtGui.QRegExpValidator(alphanumeric_regex)
 
+    def create_asset_sub_type_validator(self):
+        """
+        Create a QtGui.QValidator instance that will be used by the task name field to interactively
+        inform if the name is valid or not. The caller will take ownership of the validator.
+
+        For example, this simple validator will prevent the user from entering spaces in the field.
+
+        .. code-block:: python
+
+            class _Validator(QtGui.QValidator):
+
+                def validate(self, text, pos):
+                    if " " in text:
+                        return QtGui.QValidator.Intermediate, text.replace(" ", ""), pos - 1
+                    else:
+                        return QtGui.QValidator.Acceptable, text, pos
+
+        .. note:: The calling convention for fixup and validate have been modified to make them more pythonic.
+            http://pyside.readthedocs.org/en/1.2.2/sources/pyside/doc/pysideapi2.html?highlight=string#qstring
+
+        :returns: A QtGui.QValidator derived object.
+        """
+
+        alphanumeric_regex = QtCore.QRegExp("^[a-zA-Z0-9]*$")
+
+        return QtGui.QRegExpValidator(alphanumeric_regex)
+
+
     def create_new_asset(self, name, asset_type, task_template, sub_type=None):
         """
         Create a new task with the specified information.
