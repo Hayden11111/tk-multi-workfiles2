@@ -133,13 +133,13 @@ class NewAssetForm(QtGui.QWidget):
 
     def title_asset_name(self,text):
 
-        cur_text = text.title()
-        self._ui.asset_name.setText(cur_text)
+        valid_string = text[0].upper() + text[1:]
+        self._ui.asset_name.setText(valid_string)
 
     def title_sub_type_name(self,text):
 
-        cur_text = text.title()
-        self._ui.custom_sub_type.setText(cur_text)
+        valid_string = text[0].upper() + text[1:]
+        self._ui.custom_sub_type.setText(valid_string)
 
     @property
     def custom_flag(self):
