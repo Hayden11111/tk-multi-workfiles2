@@ -102,6 +102,8 @@ class NewAssetForm(QtGui.QWidget):
         self._ui.create_btn.clicked.connect(self._on_create_btn_clicked)
         self._ui.asset_type.currentIndexChanged.connect(self._update_task_template)
         self._ui.sub_type.currentTextChanged.connect(self.init_custom_sub_type)
+        self._ui.asset_name.textChanged.connect(self.title_asset_name)
+        self._ui.custom_sub_type.textChanged.connect(self.title_sub_type_name)
         self._update_task_template(0)
 
         self.init_custom_sub_type("")
@@ -128,6 +130,16 @@ class NewAssetForm(QtGui.QWidget):
 
         self.activateWindow()
         super(NewAssetForm, self).show()
+
+    def title_asset_name(self,text):
+
+        cur_text = text.title()
+        self._ui.asset_name.setText(cur_text)
+
+    def title_sub_type_name(self,text):
+
+        cur_text = text.title()
+        self._ui.custom_sub_type.setText(cur_text)
 
     @property
     def custom_flag(self):
