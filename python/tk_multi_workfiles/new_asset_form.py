@@ -98,6 +98,11 @@ class NewAssetForm(QtGui.QWidget):
 
         self._ui.sub_type.addItem("Custom")
 
+        self.project_assets = self._app.sgtk.shotgun.find("Asset", [["project", "is", self._app.engine.context.project]], ["code"])
+
+        for i in self.project_assets:
+            self._ui.anim_asset.addItem(i["code"], i)
+
         # hook up controls:
         self._ui.create_btn.clicked.connect(self._on_create_btn_clicked)
         self._ui.asset_type.currentIndexChanged.connect(self._update_task_template)
@@ -105,6 +110,7 @@ class NewAssetForm(QtGui.QWidget):
         self._ui.asset_name.textChanged.connect(self.title_asset_name)
         self._ui.custom_sub_type.textChanged.connect(self.title_sub_type_name)
         self._update_task_template(0)
+        self._ui.anim_asset.currentIndexChanged.connect(self.update_anim_asset)
 
         self.init_custom_sub_type("")
 
@@ -126,17 +132,28 @@ class NewAssetForm(QtGui.QWidget):
             self._ui.custom_sub_type.setEnabled(False)
             self._ui.custom_sub_type.setPlaceholderText("Select the Custom Sub Type")
 
+    def update_anim_asset(self):
+
+        selected_asset = self._ui.anim_asset.currentData()
+        anim_entities = self._app.sgtk.shotgun.find("CustomEntity09", [["sg_asset", "is", selected_asset]], ["code"])
+
+        self._ui.anim_asset_combo.clear()
+        for i in anim_entities:
+            self._ui.anim_asset_combo.addItem(i["code"], i)
+
+
+
     def show(self):
 
         self.activateWindow()
         super(NewAssetForm, self).show()
 
-    def title_asset_name(self,text):
+    def title_asset_name(self, text):
 
         valid_string = text[0].upper() + text[1:]
         self._ui.asset_name.setText(valid_string)
 
-    def title_sub_type_name(self,text):
+    def title_sub_type_name(self, text):
 
         valid_string = text[0].upper() + text[1:]
         self._ui.custom_sub_type.setText(valid_string)
@@ -207,10 +224,19 @@ class NewAssetForm(QtGui.QWidget):
         """
         Called when the user is ready to create the task.
         """
-        if len(self._get_asset_name()) == 0:
-            self._set_warning("Please enter an asset name.")
-            return
+        self._app.logger.debug(self._ui.tab_widget.currentIndex)
 
+        if self._ui.tab_widget.currentIndex() == 0:
+            if len(self._get_asset_name()) == 0:
+                self._set_warning("Please enter an asset name.")
+                return
+            self._create_asset()
+
+        if self._ui.tab_widget.currentIndex() == 1:
+            self._app.logger.debug("Creating Animation")
+            self._create_anim()
+
+    def _create_asset(self):
         try:
             self._app.execute_hook_method(
                 "create_new_asset_hook",
@@ -219,6 +245,21 @@ class NewAssetForm(QtGui.QWidget):
                 asset_type=self._ui.asset_type.currentText(),
                 task_template=self._get_task_template(),
                 sub_type=self._get_sub_type()
+            )
+            self._exit_code = QtGui.QDialog.Accepted
+            self.close()
+        except sgtk.TankError as e:
+            self._set_warning(str(e))
+
+    def _create_anim(self):
+        try:
+            self._app.execute_hook_method(
+                "create_new_asset_hook",
+                "create_new_animation",
+                asset=self._ui.anim_asset.currentData(),
+                anim_asset=self._ui.anim_asset_combo.currentData(),
+                new_anim_name=self._ui.anim_name.text(),
+                action=self._ui.anim_action_name.text()
             )
             self._exit_code = QtGui.QDialog.Accepted
             self.close()

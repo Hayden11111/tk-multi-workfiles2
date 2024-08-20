@@ -120,3 +120,49 @@ class CreateNewAssetHook(HookClass):
             raise sgtk.TankError("Failed to create new asset - reason unknown!")
 
         return None
+
+    def create_new_animation(self, asset, anim_asset, new_anim_name, action):
+        """
+        Create a new task with the specified information.
+
+        :param name: Name of the task to be created.
+
+        :param asset_type: Pipeline step associated with the task.
+        :type asset_type: dictionary with keys 'Type' and 'id'
+
+        :param task_template: Entity associated with this task.
+        :type task_template: dictionary with keys 'Type' and 'id'
+
+        :param sub_type: User assigned to the task. Can be None.
+        :type sub_type: dictionary with keys 'Type' and 'id'
+
+        :returns: The created task.
+        :rtype: dictionary with keys 'step', 'project', 'entity', 'content' and 'task_assignees' if
+            'assigned_to' was set.
+
+        :raises sgtk.TankError: On error, during validation or creation, this method
+            raises a TankError.
+        """
+        app = self.parent
+
+        if not anim_asset:
+            data = {
+                "code": new_anim_name,
+                "project": app.context.project,
+                "sg_asset": asset,
+            }
+            anim_asset = app.shotgun.create("CustomEntity09", data)
+
+        data = {
+            "code": action,
+            "project": app.context.project,
+            "sg_animation": anim_asset,
+            "task_template": {"type": "TaskTemplate", "id": 277 }
+        }
+
+        # create the asset:
+        sg_result = app.shotgun.create("CustomEntity10", data)
+        if not sg_result:
+            raise sgtk.TankError("Failed to create new asset - reason unknown!")
+
+        return None

@@ -13,10 +13,37 @@ class Ui_NewAssetForm(object):
         NewAssetForm.setObjectName("NewAssetForm")
         NewAssetForm.resize(380, 270)
         NewAssetForm.setMinimumSize(QtCore.QSize(380, 270))
-        self.verticalLayout = QtGui.QVBoxLayout(NewAssetForm)
+
+        self.verticalLayout_widget = QtGui.QVBoxLayout(NewAssetForm)
+
+        self.tab_widget = QtGui.QTabWidget()
+
+
+
+        self.asset_tab = QtGui.QWidget(self.tab_widget)
+        self.animation_tab = QtGui.QWidget(self.tab_widget)
+
+        self.tab_widget.addTab(self.asset_tab, "Create Asset")
+        self.tab_widget.addTab(self.animation_tab, "Create Animation")
+
+        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout_animation = QtGui.QVBoxLayout()
+
+
+
         self.verticalLayout.setSpacing(4)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        self.verticalLayout_animation.setSpacing(4)
+        self.verticalLayout_animation.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_animation.setObjectName("verticalLayout_animation")
+
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+
+        # Asset Form intro
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setSpacing(20)
         self.verticalLayout_2.setContentsMargins(12, 12, 12, 4)
@@ -25,10 +52,70 @@ class Ui_NewAssetForm(object):
         self.label_3.setWordWrap(True)
         self.label_3.setObjectName("label_3")
         self.verticalLayout_2.addWidget(self.label_3)
+
+        # Animation Form Intro
+        self.verticalLayout_2_anim = QtGui.QVBoxLayout()
+        self.verticalLayout_2_anim.setSpacing(20)
+        self.verticalLayout_2_anim.setContentsMargins(12, 12, 12, 4)
+        self.verticalLayout_2_anim.setObjectName("verticalLayout_2_anim")
+        self.label_3_anim = QtGui.QLabel()
+        self.label_3_anim.setWordWrap(True)
+        self.label_3_anim.setObjectName("label_3_anim")
+
+
+        self.verticalLayout_2_anim.addWidget(self.label_3_anim)
+
+        # Grid for Asset
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setHorizontalSpacing(20)
         self.gridLayout.setVerticalSpacing(6)
         self.gridLayout.setObjectName("gridLayout")
+
+
+        anim_asset_layout =  QtGui.QHBoxLayout()
+
+        self.anim_asset_name = QtGui.QLabel(NewAssetForm)
+        self.anim_asset_name.setObjectName("anim_asset_name")
+        self.anim_asset_name.setFont(font)
+
+        self.anim_asset = QtGui.QComboBox(NewAssetForm)
+        self.anim_asset.setObjectName("anim_asset")
+
+        anim_asset_layout.addWidget(self.anim_asset_name)
+        anim_asset_layout.addWidget(self.anim_asset)
+        self.verticalLayout_2_anim.addLayout(anim_asset_layout)
+
+        anim_name_asset_layout = QtGui.QHBoxLayout()
+        self.anim_name_label = QtGui.QLabel(NewAssetForm)
+        self.anim_name_label.setObjectName("anim_name_label")
+        self.anim_name_label.setFont(font)
+
+        self.anim_asset_combo = QtGui.QComboBox(NewAssetForm)
+        self.anim_asset_combo.setObjectName("anim_asset_combo")
+        self.anim_asset_combo.setMinimumWidth(100)
+
+        self.anim_name = QtGui.QLineEdit(NewAssetForm)
+        self.anim_name.setObjectName("anim_name")
+        anim_name_asset_layout.addWidget(self.anim_name_label)
+        anim_name_asset_layout.addWidget(self.anim_asset_combo)
+        anim_name_asset_layout.addWidget(self.anim_name)
+        self.verticalLayout_2_anim.addLayout(anim_name_asset_layout)
+
+
+        anim_action_layout = QtGui.QHBoxLayout()
+        self.anim_action_name_label = QtGui.QLabel(NewAssetForm)
+        self.anim_name_label.setFont(font)
+        self.anim_action_name_label.setObjectName("anim_action_name_label")
+        self.anim_action_name = QtGui.QLineEdit(NewAssetForm)
+        self.anim_action_name_label.setFont(font)
+        self.anim_action_name.setObjectName("anim_action_name")
+
+        anim_action_layout.addWidget(self.anim_action_name_label)
+        anim_action_layout.addWidget(self.anim_action_name)
+        self.verticalLayout_2_anim.addLayout(anim_action_layout)
+
+        #self.verticalLayout_2_anim.addLayout(self.gridLayout_anim)
+
         self.label_6 = QtGui.QLabel(NewAssetForm)
         self.task_template_label = QtGui.QLabel(NewAssetForm)
         self.sub_type_label = QtGui.QLabel(NewAssetForm)
@@ -83,13 +170,15 @@ class Ui_NewAssetForm(object):
         self.asset_name.setObjectName("asset_name")
         self.gridLayout.addWidget(self.asset_name, 0, 2, 1, 1)
         self.gridLayout.setColumnStretch(2, 1)
+        #self.gridLayout_anim.setColumnStretch(2, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
+
         self.warning = QtGui.QLabel(NewAssetForm)
         self.warning.setText("")
         self.warning.setWordWrap(True)
         self.warning.setObjectName("warning")
-        self.verticalLayout_2.addWidget(self.warning)
         self.verticalLayout.addLayout(self.verticalLayout_2)
+        self.verticalLayout_animation.addLayout(self.verticalLayout_2_anim)
         spacerItem1 = QtGui.QSpacerItem(20, 11, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem1)
         self.break_line = QtGui.QFrame(NewAssetForm)
@@ -110,19 +199,34 @@ class Ui_NewAssetForm(object):
         self.create_btn.setDefault(True)
         self.create_btn.setObjectName("create_btn")
         self.horizontalLayout.addWidget(self.create_btn)
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout_widget.addWidget(self.tab_widget)
+        self.verticalLayout_widget.addWidget(self.warning)
+        self.verticalLayout_widget.addLayout(self.horizontalLayout)
         self.verticalLayout.setStretch(2, 1)
+        self.verticalLayout_2_anim.setStretch(2, 1)
+
+        self.asset_tab.setLayout(self.verticalLayout)
+        self.animation_tab.setLayout(self.verticalLayout_animation)
+
+
+
 
         self.retranslateUi(NewAssetForm)
         QtCore.QObject.connect(self.cancel_btn, QtCore.SIGNAL("clicked()"), NewAssetForm.close)
         QtCore.QMetaObject.connectSlotsByName(NewAssetForm)
-        NewAssetForm.setTabOrder(self.asset_name, self.asset_type)
-        NewAssetForm.setTabOrder(self.asset_type, self.create_btn)
-        NewAssetForm.setTabOrder(self.create_btn, self.cancel_btn)
+        #NewAssetForm.setTabOrder(self.asset_name, self.asset_type)
+        #NewAssetForm.setTabOrder(self.asset_type, self.create_btn)
+        #NewAssetForm.setTabOrder(self.create_btn, self.cancel_btn)
 
     def retranslateUi(self, NewAssetForm):
         NewAssetForm.setWindowTitle(QtGui.QApplication.translate("NewAssetForm", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("NewAssetForm", "Create a new Asset using the Name and Pipeline Step entered below.", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3_anim.setText(QtGui.QApplication.translate("NewAssetForm", "Create a new Animation and Action.", None, QtGui.QApplication.UnicodeUTF8))
+        self.anim_name_label.setText(QtGui.QApplication.translate("NewAssetForm", "Animation Name:", None, QtGui.QApplication.UnicodeUTF8))
+        self.anim_action_name_label.setText(QtGui.QApplication.translate("NewAssetForm", "Action Name:", None, QtGui.QApplication.UnicodeUTF8))
+        self.anim_asset_name.setText(
+            QtGui.QApplication.translate("NewAssetForm", "Asset:", None, QtGui.QApplication.UnicodeUTF8))
+
         self.asset_type.setAccessibleName(QtGui.QApplication.translate("NewAssetForm", "Asset Type", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("NewAssetForm", "Asset Type:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("NewAssetForm", "Asset Name:", None, QtGui.QApplication.UnicodeUTF8))
